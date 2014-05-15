@@ -34,3 +34,6 @@ class Velocity extends Component {
   Vector2 value;
   Velocity({num x: 0, num y: 0}) : value = new Vector2(x.toDouble(), y.toDouble());
 }
+class Lifetime extends Component {
+  double lifetime = 10000.0;
+}

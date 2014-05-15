@@ -2,7 +2,8 @@ import 'package:3hgj_merge/client.dart';
 
 @MirrorsUsed(targets: const [CircleRenderingSystem, InputHandlingSystem,
                              AcccelerationSystem, MovementSystem,
-                             CanvasCleaningSystem
+                             CanvasCleaningSystem, CircleSpawner,
+                             CircleRemover
                             ])
 import 'dart:mirrors';
 
@@ -22,6 +23,7 @@ class Game extends GameBase {
 
   List<EntitySystem> getSystems() {
     return [
+            new CircleSpawner(),
             new InputHandlingSystem(),
             new AcccelerationSystem(),
             new MovementSystem(),
@@ -29,6 +31,7 @@ class Game extends GameBase {
             new CanvasCleaningSystem(canvas),
             new CircleRenderingSystem(ctx),
             new FpsRenderingSystem(ctx),
+            new CircleRemover(),
             new AnalyticsSystem(AnalyticsSystem.GITHUB, '3hgj_merge')
     ];
   }
