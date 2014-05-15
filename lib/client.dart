@@ -8,7 +8,7 @@ export 'package:3hgj_merge/shared.dart';
 
 import 'package:canvas_query/canvas_query.dart';
 export 'package:canvas_query/canvas_query.dart';
-import 'package:gamedev_helpers/gamedev_helpers.dart';
+import 'package:gamedev_helpers/gamedev_helpers.dart' hide CanvasCleaningSystem;
 export 'package:gamedev_helpers/gamedev_helpers.dart';
 
 //part 'src/client/systems/name.dart';
