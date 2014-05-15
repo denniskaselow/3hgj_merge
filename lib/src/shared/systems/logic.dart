@@ -106,3 +106,65 @@ class CircleRemover extends EntityProcessingSystem {
     }
   }
 }
+
+class CircleCollisionDetectionSystem extends EntityProcessingSystem {
+  TagManager tagManager;
+  ComponentMapper<Transform> tm;
+  ComponentMapper<Circle> cm;
+  ComponentMapper<Color> com;
+  Vector2 playerPos;
+  Circle playerCircle;
+  Color playerColor;
+
+  CircleCollisionDetectionSystem() : super(Aspect.getAspectForAllOf([Circle, Transform, Color]).exclude([Player]));
+
+  @override
+  void begin() {
+    var player = tagManager.getEntity(TAG_PLAYER);
+    playerPos = tm.get(player).pos;
+    playerCircle = cm.get(player);
+    playerColor = com.get(player);
+  }
+
+
+  @override
+  void processEntity(Entity entity) {
+    var pos = tm.get(entity).pos;
+    var circle = cm.get(entity);
+    if (Utils.doCirclesCollide(pos.x, pos.y, circle.radius, playerPos.x, playerPos.y, playerCircle.radius)) {
+      var playerArea = playerCircle.area;
+      var area = circle.area;
+      var color = com.get(entity);
+      var ratio = area / playerArea;
+      if (area / playerArea < 0.1) {
+        playerArea += area;
+        entity.deleteFromWorld();
+      } else if (area > playerArea) {
+        area += playerArea * 0.1;
+        playerArea *= 0.9;
+        circle.radius = sqrt(area / PI);
+        ratio = 0.0;
+      } else {
+        playerArea += area * 0.1;
+        area *= 0.9;
+        ratio *= 0.1;
+        circle.radius = sqrt(area / PI);
+      }
+      playerColor.hue += ((color.hue - playerColor.hue) * ratio).toInt();
+      playerColor.hue = playerColor.hue % 360;
+      playerColor.saturation += (color.saturation - playerColor.saturation) * ratio;
+      playerColor.lightness += (color.lightness - playerColor.lightness) * ratio;
+      playerColor.opacity += (color.opacity - playerColor.opacity) * ratio;
+
+      playerCircle.radius = sqrt(playerArea / PI);
+    }
+  }
+}
+
+class TweenSystem extends VoidEntitySystem {
+
+  @override
+  void processSystem() {
+    tweenManager.update(world.delta);
+  }
+}

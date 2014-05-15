@@ -9,13 +9,12 @@ class Transform extends Component {
 class Circle extends Component {
   double radius;
   Circle(num radius) : this.radius = radius.toDouble();
+  double get area => PI * radius * radius;
 }
 
 class Color extends Component {
   int hue;
-  double saturation;
-  double lightness;
-  double opacity;
+  double saturation, lightness, opacity;
   Color({num hue: 0, num saturation: 50, num lightness: 50, num opacity: 1})
       : hue = hue.toInt(),
         saturation = saturation.toDouble(),
