@@ -3,12 +3,12 @@ import 'package:3hgj_merge/client.dart';
 @MirrorsUsed(targets: const [CircleRenderingSystem, InputHandlingSystem,
                              AcccelerationSystem, MovementSystem,
                              CanvasCleaningSystem, CircleSpawner,
-                             CircleRemover, CircleCollisionDetectionSystem
+                             CircleRemover, CircleCollisionDetectionSystem,
+                             WallBouncingSystem
                             ])
 import 'dart:mirrors';
 
 void main() {
-  Tween.combinedAttributesLimit = 4;
   new Game().start();
 }
 
@@ -24,7 +24,6 @@ class Game extends GameBase {
 
   List<EntitySystem> getSystems() {
     return [
-            new TweenSystem(),
             new CircleSpawner(),
             new InputHandlingSystem(),
             new AcccelerationSystem(),
@@ -33,7 +32,7 @@ class Game extends GameBase {
             new CircleCollisionDetectionSystem(),
             new CanvasCleaningSystem(canvas),
             new CircleRenderingSystem(ctx),
-            new FpsRenderingSystem(ctx),
+//            new FpsRenderingSystem(ctx),
             new CircleRemover(),
             new AnalyticsSystem(AnalyticsSystem.GITHUB, '3hgj_merge')
     ];

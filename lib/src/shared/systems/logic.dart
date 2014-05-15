@@ -160,11 +160,3 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
     }
   }
 }
-
-class TweenSystem extends VoidEntitySystem {
-
-  @override
-  void processSystem() {
-    tweenManager.update(world.delta);
-  }
-}
