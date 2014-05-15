@@ -16,7 +16,7 @@ class Game extends GameBase {
 
   void createEntities() {
     TagManager tm = world.getManager(TagManager);
-    var e= addEntity([new Transform(250, 250), new Circle(10), new Color(), new InputController(), new Acceleration(), new Velocity()]);
+    var e= addEntity([new Transform(250, 250), new Circle(10), new Color(), new Player(), new Acceleration(), new Velocity()]);
     tm.register(e, TAG_PLAYER);
   }
 
@@ -25,6 +25,7 @@ class Game extends GameBase {
             new InputHandlingSystem(),
             new AcccelerationSystem(),
             new MovementSystem(),
+            new WallBouncingSystem(),
             new CanvasCleaningSystem(canvas),
             new CircleRenderingSystem(ctx),
             new FpsRenderingSystem(ctx),

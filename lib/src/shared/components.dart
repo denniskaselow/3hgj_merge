@@ -24,7 +24,7 @@ class Color extends Component {
 
 }
 
-class InputController extends Component {}
+class Player extends Component {}
 class Acceleration extends Component {
   Vector2 value = new Vector2.zero();
   double max = 10.0;

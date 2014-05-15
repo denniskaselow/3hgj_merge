@@ -3,7 +3,7 @@ part of client;
 
 class InputHandlingSystem extends GenericInputHandlingSystem {
   ComponentMapper<Acceleration> am;
-  InputHandlingSystem() : super(Aspect.getAspectForAllOf([InputController, Acceleration]));
+  InputHandlingSystem() : super(Aspect.getAspectForAllOf([Player, Acceleration]));
 
   @override
   void processEntity(Entity entity) {

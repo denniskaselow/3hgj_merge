@@ -32,3 +32,26 @@ class MovementSystem extends EntityProcessingSystem {
     t.pos.y += v.value.y / world.delta;
   }
 }
+
+class WallBouncingSystem extends EntityProcessingSystem {
+  ComponentMapper<Velocity> vm;
+  ComponentMapper<Transform> tm;
+  WallBouncingSystem() : super(Aspect.getAspectForAllOf([Player, Velocity, Transform]));
+
+  @override
+  void processEntity(Entity entity) {
+    var t = tm.get(entity);
+    var v = vm.get(entity);
+
+    var x = t.pos.x;
+    var y = t.pos.y;
+    if (x <= 0.0 || x >= 500.0) {
+      t.pos.x = x > 0.0 ? 500.0 : 0.0;
+      v.value.x = -0.8 * v.value.x;
+    }
+    if (y <= 0.0 || y >= 500.0) {
+      t.pos.y = y > 0.0 ? 500.0 : 0.0;
+      v.value.y = -0.8 * v.value.y;
+    }
+  }
+}
