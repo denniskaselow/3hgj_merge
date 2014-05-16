@@ -148,9 +148,9 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
       if (area / playerArea < 0.1) {
         playerArea += area;
         entity.deleteFromWorld();
-        gameState.eatenEntities++;
-        if (gameState.eatenEntities % 10 == 0) {
-          eventBus.fire(analyticsTrackEvent, new AnalyticsTrackEvent('Circles absorbed', '${gameState.eatenEntities}'));
+        gameState.absorbed++;
+        if (gameState.absorbed % 10 == 0) {
+          eventBus.fire(analyticsTrackEvent, new AnalyticsTrackEvent('Circles absorbed', '${gameState.absorbed}'));
         }
       } else if (area > playerArea) {
         area += playerArea * 0.1;
@@ -174,6 +174,9 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
       playerColor.opacity += (color.opacity - playerColor.opacity) * ratio;
 
       playerCircle.radius = sqrt(playerArea / PI);
+      if (playerCircle.radius > gameState.bestRadius) {
+        gameState.bestRadius = playerCircle.radius;
+      }
     }
   }
 

@@ -61,7 +61,25 @@ class StatsRenderingSystem extends VoidEntitySystem {
     var circle = cm.get(player);
     var color = com.get(player);
 
-    var radius = circle.radius / 1000;
+    var radius = getRadius(circle.radius);
+    var bestRadius = getRadius(gameState.bestRadius);
+    var textRadius = 'Radius: $radius';
+    var textBestRadius = 'Personal best: $bestRadius';
+    var textAbsorbed = 'Circles absorbed: ${gameState.absorbed}';
+    var textBestAbsorbed = 'Personal best: ${gameState.bestAbsorbed}';
+    var textRadiusWidth = ctx.measureText(textRadius).width;
+    var textBestRadiusWidth = ctx.measureText(textBestRadius).width;
+
+    ctx..font = 'bold ${ctx.font}'
+       ..setFillColorHsl(color.hue, color.saturation, color.lightness)
+       ..fillText(textAbsorbed, 10, 460)
+       ..fillText(textBestAbsorbed, 10, 480)
+       ..fillText(textRadius, 490 - textRadiusWidth, 460)
+       ..fillText(textBestRadius, 490 - textBestRadiusWidth, 480);
+  }
+
+  String getRadius(double radius) {
+    radius = radius / 1000;
     var unit = 'm';
     if (radius < 0.000000001) {
       unit = 'pm';
@@ -102,14 +120,6 @@ class StatsRenderingSystem extends VoidEntitySystem {
       unit = 'parsec';
       radius /= 30856776000000000.0;
     }
-
-    var textRadius = 'Radius: ${radius.toStringAsFixed(2)} $unit';
-    var textEaten = 'Circles absorbed: ${gameState.eatenEntities}';
-    var textRadiusWidth = ctx.measureText(textRadius).width;
-
-    ctx..font = 'bold ${ctx.font}'
-       ..setFillColorHsl(color.hue, color.saturation, color.lightness)
-       ..fillText(textEaten, 10, 480)
-       ..fillText(textRadius, 490 - textRadiusWidth, 480);
+    return '${radius.toStringAsFixed(2)} $unit';
   }
 }

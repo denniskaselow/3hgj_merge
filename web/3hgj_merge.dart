@@ -36,6 +36,7 @@ class Game extends GameBase {
             new StatsRenderingSystem(ctx),
 //            new FpsRenderingSystem(ctx),
             new CircleRemover(),
+            new HighScoreSavingSystem(),
             new AnalyticsSystem(AnalyticsSystem.ITCHIO, '3hgj_merge')
     ];
   }

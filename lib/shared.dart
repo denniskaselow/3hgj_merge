@@ -15,7 +15,9 @@ final gameState = new GameState();
 
 class GameState implements Tweenable {
   static const ZOOM_FACTOR = 0;
-  int eatenEntities = 0;
+  int _absorbed = 0;
+  int bestAbsorbed = 0;
+  double bestRadius = 10.0;
   double threshold = 1.2;
   int _zoomLevel = 0;
   double _zoomFactor = 1.0;
@@ -33,6 +35,13 @@ class GameState implements Tweenable {
   int get zoomLevel => _zoomLevel;
   double get zoomFactor => _zoomFactor;
   double get tZoomFactor => _tZoomFactor;
+  int get absorbed => _absorbed;
+  void set absorbed(int value) {
+    _absorbed = value;
+    if (_absorbed > bestAbsorbed) {
+      bestAbsorbed = _absorbed;
+    }
+  }
 
   @override
   int getTweenableValues(int tweenType, List<num> returnValues) {

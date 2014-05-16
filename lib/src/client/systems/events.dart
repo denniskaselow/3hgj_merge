@@ -29,3 +29,49 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
   bool get left => keyState[KeyCode.A] == true || keyState[KeyCode.LEFT] == true;
   bool get right => keyState[KeyCode.D] == true || keyState[KeyCode.RIGHT] == true;
 }
+
+
+class HighScoreSavingSystem extends IntervalEntitySystem {
+  static const ABSORBED = 'absorbed';
+  static const RADIUS = 'radius';
+  Store store;
+  double bestRadius = 10.0;
+  int bestAbsorbed = 0;
+  HighScoreSavingSystem() : super(1000, Aspect.getEmpty());
+
+  initialize() {
+    store = new Store('3hgj_merge', 'stats');
+    store.open().then((_) {
+      store.getByKey(ABSORBED).then((value) {
+        if (null != value) {
+          gameState.bestAbsorbed = value;
+          bestAbsorbed = value;
+        }
+      });
+      store.getByKey(RADIUS).then((value) {
+        if (null != value) {
+          gameState.bestRadius = value;
+          bestRadius = value;
+        }
+      });
+    });
+  }
+
+  @override
+  processEntities(_) {
+    if (gameState.bestAbsorbed > bestAbsorbed) {
+      bestAbsorbed = gameState.bestAbsorbed;
+      save(ABSORBED, bestAbsorbed);
+    }
+    if (gameState.bestRadius > bestRadius) {
+      bestRadius = gameState.bestRadius;
+      save(RADIUS, bestRadius);
+    }
+  }
+
+  void save(String key, Object newValue) {
+    store.getByKey(key).then((value) {
+      store.save(newValue, key);
+    });
+  }
+}
