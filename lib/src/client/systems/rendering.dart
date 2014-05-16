@@ -47,3 +47,69 @@ class CircleRenderingSystem extends EntityProcessingSystem {
     ctx.restore();
   }
 }
+
+class StatsRenderingSystem extends VoidEntitySystem {
+  CanvasRenderingContext2D ctx;
+  TagManager tm;
+  ComponentMapper<Circle> cm;
+  ComponentMapper<Color> com;
+  StatsRenderingSystem(this.ctx);
+
+  @override
+  void processSystem() {
+    var player = tm.getEntity(TAG_PLAYER);
+    var circle = cm.get(player);
+    var color = com.get(player);
+
+    var radius = circle.radius / 1000;
+    var unit = 'm';
+    if (radius < 0.000000001) {
+      unit = 'pm';
+      radius *= 1000000000000;
+    } else if (radius < 0.000001) {
+      unit = 'nm';
+      radius *= 1000000000;
+    } else if (radius < 0.001) {
+      unit = 'µm';
+      radius *= 1000000;
+    } else if (radius < 0.01) {
+      unit = 'mm';
+      radius *= 1000;
+    } else if (radius < 1.0) {
+      unit = 'cm';
+      radius *= 100;
+    } else if (radius < 1000.0) {
+      unit = 'm';
+    } else if (radius < 6335.437) {
+      unit = 'km';
+      radius /= 1000;
+    } else if (radius < 695500000.0) {
+      unit = 'Earth radius';
+      radius /= 6335.437;
+    } else if (radius < 149597870700.0) {
+      unit = 'Sun radius';
+      radius /= 695500000.0;
+    } else if (radius < 25902068400000.0) {
+      unit = 'AU';
+      radius /= 149597870700.0;
+    } else if (radius < 9460528400000000.0) {
+      unit = 'lightdays';
+      radius /= 25902068400000.0;
+    } else if (radius < 30856776000000000.0) {
+      unit = 'lightyears';
+      radius /= 9460528400000000.0;
+    } else {
+      unit = 'parsec';
+      radius /= 30856776000000000.0;
+    }
+
+    var textRadius = 'Radius: ${radius.toStringAsFixed(2)} $unit';
+    var textEaten = 'Circles absorbed: ${gameState.eatenEntities}';
+    var textRadiusWidth = ctx.measureText(textRadius).width;
+
+    ctx..font = 'bold ${ctx.font}'
+       ..setFillColorHsl(color.hue, color.saturation, color.lightness)
+       ..fillText(textEaten, 10, 480)
+       ..fillText(textRadius, 490 - textRadiusWidth, 480);
+  }
+}

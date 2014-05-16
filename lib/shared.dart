@@ -15,6 +15,7 @@ final gameState = new GameState();
 
 class GameState implements Tweenable {
   static const ZOOM_FACTOR = 0;
+  int eatenEntities = 0;
   double threshold = 1.2;
   int _zoomLevel = 0;
   double _zoomFactor = 1.0;

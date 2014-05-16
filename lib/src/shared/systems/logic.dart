@@ -148,6 +148,10 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
       if (area / playerArea < 0.1) {
         playerArea += area;
         entity.deleteFromWorld();
+        gameState.eatenEntities++;
+        if (gameState.eatenEntities % 10 == 0) {
+          eventBus.fire(analyticsTrackEvent, new AnalyticsTrackEvent('Circles absorbed', '${gameState.eatenEntities}'));
+        }
       } else if (area > playerArea) {
         area += playerArea * 0.1;
         playerArea *= 0.9;
@@ -178,8 +182,14 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
     var playerZoomRatio = playerCircle.radius / gameState.tZoomFactor;
     if (playerZoomRatio > 10.0 * gameState.threshold) {
       gameState.zoomLevel++;
+      if (gameState.zoomLevel.abs() % 10 == 0) {
+        eventBus.fire(analyticsTrackEvent, new AnalyticsTrackEvent('Zoom Out', '${gameState.zoomLevel}'));
+      }
     } else if (playerZoomRatio < 10.0 / gameState.threshold) {
       gameState.zoomLevel--;
+      if (gameState.zoomLevel.abs() % 10 == 0) {
+        eventBus.fire(analyticsTrackEvent, new AnalyticsTrackEvent('Zoom In', '${gameState.zoomLevel}'));
+      }
     }
   }
 }

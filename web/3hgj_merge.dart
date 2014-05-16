@@ -4,7 +4,7 @@ import 'package:3hgj_merge/client.dart';
                              AcccelerationSystem, MovementSystem,
                              CanvasCleaningSystem, CircleSpawner,
                              CircleRemover, CircleCollisionDetectionSystem,
-                             WallBouncingSystem
+                             WallBouncingSystem, StatsRenderingSystem
                             ])
 import 'dart:mirrors';
 
@@ -33,6 +33,7 @@ class Game extends GameBase {
             new CircleCollisionDetectionSystem(),
             new CanvasCleaningSystem(canvas),
             new CircleRenderingSystem(ctx),
+            new StatsRenderingSystem(ctx),
 //            new FpsRenderingSystem(ctx),
             new CircleRemover(),
             new AnalyticsSystem(AnalyticsSystem.ITCHIO, '3hgj_merge')
