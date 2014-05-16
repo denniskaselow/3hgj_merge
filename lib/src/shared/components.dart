@@ -36,3 +36,4 @@ class Velocity extends Component {
 class Lifetime extends Component {
   double lifetime = 10000.0;
 }
+class Particle extends Component {}

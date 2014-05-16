@@ -125,7 +125,7 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
   Circle playerCircle;
   Color playerColor;
 
-  CircleCollisionDetectionSystem() : super(Aspect.getAspectForAllOf([Circle, Transform, Color]).exclude([Player]));
+  CircleCollisionDetectionSystem() : super(Aspect.getAspectForAllOf([Circle, Transform, Color]).exclude([Player, Particle]));
 
   @override
   void begin() {
@@ -147,11 +147,24 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
       var ratio = area / playerArea;
       if (area / playerArea < 0.1) {
         playerArea += area;
-        entity.deleteFromWorld();
         gameState.absorbed++;
         if (gameState.absorbed % 10 == 0) {
           eventBus.fire(analyticsTrackEvent, new AnalyticsTrackEvent('Circles absorbed', '${gameState.absorbed}'));
         }
+        for (int i = 0; i < 3 * sqrt(area) / gameState.zoomFactor; i++) {
+          var velocityAngle = 2 * PI * random.nextDouble();
+          var velocityMult = 25.0 + random.nextDouble() * 50;
+          world.createAndAddEntity([new Particle(),
+                                    new Lifetime(),
+                                    new Transform(pos.x + sin(-circle.radius + random.nextDouble() * 2 * circle.radius),
+                                        pos.y + sin(-circle.radius + random.nextDouble() * 2 * circle.radius)),
+                                    new Velocity(x: sin(velocityAngle) * velocityMult * gameState.zoomFactor,
+                                        y: cos(velocityAngle) * velocityMult * gameState.zoomFactor),
+                                    new Circle(random.nextDouble() * circle.radius),
+                                    new Color(hue: color.hue, saturation: color.saturation, lightness: color.lightness, opacity: color.opacity)
+                                    ]);
+        }
+        entity.deleteFromWorld();
       } else if (area > playerArea) {
         area += playerArea * 0.1;
         playerArea *= 0.9;
