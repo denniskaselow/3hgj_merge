@@ -79,28 +79,28 @@ class StatsRenderingSystem extends VoidEntitySystem {
   }
 
   String getRadius(double radius) {
-    radius = radius / 1000;
+    radius = radius / 1000.0;
     var unit = 'm';
     if (radius < 0.000000001) {
       unit = 'pm';
-      radius *= 1000000000000;
+      radius *= 1000000000000.0;
     } else if (radius < 0.000001) {
       unit = 'nm';
-      radius *= 1000000000;
+      radius *= 1000000000.0;
     } else if (radius < 0.001) {
       unit = 'µm';
-      radius *= 1000000;
+      radius *= 1000000.0;
     } else if (radius < 0.01) {
       unit = 'mm';
-      radius *= 1000;
+      radius *= 1000.0;
     } else if (radius < 1.0) {
       unit = 'cm';
-      radius *= 100;
+      radius *= 100.0;
     } else if (radius < 1000.0) {
       unit = 'm';
     } else if (radius < 6335.437) {
       unit = 'km';
-      radius /= 1000;
+      radius /= 1000.0;
     } else if (radius < 695500000.0) {
       unit = 'Earth radius';
       radius /= 6335.437;

@@ -44,12 +44,18 @@ class HighScoreSavingSystem extends IntervalEntitySystem {
     store.open().then((_) {
       store.getByKey(ABSORBED).then((value) {
         if (null != value) {
+          if (value is String) {
+            value = int.parse(value);
+          }
           gameState.bestAbsorbed = value;
           bestAbsorbed = value;
         }
       });
       store.getByKey(RADIUS).then((value) {
         if (null != value) {
+          if (value is String) {
+            value = double.parse(value);
+          }
           gameState.bestRadius = value;
           bestRadius = value;
         }
