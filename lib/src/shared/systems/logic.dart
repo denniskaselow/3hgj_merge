@@ -1,5 +1,12 @@
 part of shared;
 
+class TweeningSystem extends VoidEntitySystem {
+
+  @override
+  void processSystem() {
+    tweenManager.update(world.delta);
+  }
+}
 
 class AcccelerationSystem extends EntityProcessingSystem {
   ComponentMapper<Acceleration> am;
@@ -45,12 +52,12 @@ class WallBouncingSystem extends EntityProcessingSystem {
 
     var x = t.pos.x;
     var y = t.pos.y;
-    if (x <= 0.0 || x >= 500.0) {
-      t.pos.x = x > 0.0 ? 500.0 : 0.0;
+    if (x.abs() >= 250.0 * gameState.zoomFactor) {
+      t.pos.x = (x > 0.0 ? 250.0 : -250.0) * gameState.zoomFactor;
       v.value.x = -0.8 * v.value.x;
     }
-    if (y <= 0.0 || y >= 500.0) {
-      t.pos.y = y > 0.0 ? 500.0 : 0.0;
+    if (y.abs() >= 250.0 * gameState.zoomFactor) {
+      t.pos.y = (y > 0.0 ? 250.0 : -250.0) * gameState.zoomFactor;
       v.value.y = -0.8 * v.value.y;
     }
   }
@@ -66,17 +73,19 @@ class CircleSpawner extends IntervalEntityProcessingSystem {
     var x = 0.5 - random.nextDouble();
     var y = 0.5 - random.nextDouble();
     if (x < 0.0) {
-      x = -50 + x * 100;
+      x = -300 + x * 100;
     } else {
-      x = 550 + x * 100;
+      x = 300 + x * 100;
     }
     if (y < 0.0) {
-      y = -50 + y * 100;
+      y = -300 + y * 100;
     } else {
-      y = 550 + y * 100;
+      y = 300 + y * 100;
     }
-    var vx = -x.sign * (2.0 + random.nextDouble() * 18);
-    var vy = -y.sign * (2.0 + random.nextDouble() * 18);
+    x *= gameState.zoomFactor;
+    y *= gameState.zoomFactor;
+    var vx = -x.sign * (2.0 + random.nextDouble() * 18) * gameState.zoomFactor;
+    var vy = -y.sign * (2.0 + random.nextDouble() * 18) * gameState.zoomFactor;
 
     world.createAndAddEntity([new Transform(x, y),
                               new Velocity(x: vx, y: vy),
@@ -100,7 +109,7 @@ class CircleRemover extends EntityProcessingSystem {
     lt.lifetime -= world.delta;
     if (lt.lifetime <= 0.0) {
       var pos = tm.get(entity).pos;
-      if (pos.x <= -100.0 || pos.x > 600.0 || pos.y <= -100.0 || pos.y > 600.0) {
+      if (pos.x.abs() > 350.0 * gameState.zoomFactor || pos.y.abs() > 350.0 * gameState.zoomFactor) {
         entity.deleteFromWorld();
       }
     }
@@ -150,13 +159,27 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
         ratio *= 0.1;
         circle.radius = sqrt(area / PI);
       }
-      playerColor.hue += ((color.hue - playerColor.hue) * ratio).toInt();
+      var hueDiff = color.hue - playerColor.hue;
+      if (hueDiff > 180) {
+        hueDiff = 180-hueDiff;
+      }
+      playerColor.hue += (hueDiff * ratio).toInt();
       playerColor.hue = playerColor.hue % 360;
       playerColor.saturation += (color.saturation - playerColor.saturation) * ratio;
       playerColor.lightness += (color.lightness - playerColor.lightness) * ratio;
       playerColor.opacity += (color.opacity - playerColor.opacity) * ratio;
 
       playerCircle.radius = sqrt(playerArea / PI);
+    }
+  }
+
+  @override
+  void end() {
+    var playerZoomRatio = playerCircle.radius / gameState.tZoomFactor;
+    if (playerZoomRatio > 10.0 * gameState.threshold) {
+      gameState.zoomLevel++;
+    } else if (playerZoomRatio < 10.0 / gameState.threshold) {
+      gameState.zoomLevel--;
     }
   }
 }

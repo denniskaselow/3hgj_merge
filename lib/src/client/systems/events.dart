@@ -8,7 +8,7 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
   @override
   void processEntity(Entity entity) {
     var a = am.get(entity);
-    var max = a.max;
+    var max = a.max * gameState.zoomFactor;
     if ((up || down) && (left || right)) {
       max *= sin(PI/4);
     }

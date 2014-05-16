@@ -18,12 +18,13 @@ class Game extends GameBase {
 
   void createEntities() {
     TagManager tm = world.getManager(TagManager);
-    var e= addEntity([new Transform(250, 250), new Circle(10), new Color(), new Player(), new Acceleration(), new Velocity()]);
+    var e= addEntity([new Transform(0, 0), new Circle(10), new Color(opacity: 0.6), new Player(), new Acceleration(), new Velocity()]);
     tm.register(e, TAG_PLAYER);
   }
 
   List<EntitySystem> getSystems() {
     return [
+            new TweeningSystem(),
             new CircleSpawner(),
             new InputHandlingSystem(),
             new AcccelerationSystem(),
@@ -34,7 +35,7 @@ class Game extends GameBase {
             new CircleRenderingSystem(ctx),
 //            new FpsRenderingSystem(ctx),
             new CircleRemover(),
-            new AnalyticsSystem(AnalyticsSystem.GITHUB, '3hgj_merge')
+            new AnalyticsSystem(AnalyticsSystem.ITCHIO, '3hgj_merge')
     ];
   }
 
