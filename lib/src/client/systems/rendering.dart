@@ -17,6 +17,8 @@ class CanvasCleaningSystem extends VoidEntitySystem {
 }
 
 class CircleRenderingSystem extends EntityProcessingSystem {
+  static const halfWidth = WIDTH / 2;
+  static const halfHeight = HEIGHT / 2;
   ComponentMapper<Transform> tm;
   ComponentMapper<Circle> cim;
   ComponentMapper<Color> com;
@@ -26,7 +28,7 @@ class CircleRenderingSystem extends EntityProcessingSystem {
   @override
   void begin() {
     ctx..save()
-       ..translate(250, 250);
+       ..translate(halfWidth, halfHeight);
   }
 
   @override
@@ -49,6 +51,9 @@ class CircleRenderingSystem extends EntityProcessingSystem {
 }
 
 class StatsRenderingSystem extends VoidEntitySystem {
+  static const currentStatsY = HEIGHT - 40;
+  static const bestStatsY = HEIGHT - 20;
+  static const borderRight = WIDTH - 10;
   CanvasRenderingContext2D ctx;
   TagManager tm;
   ComponentMapper<Circle> cm;
@@ -72,10 +77,10 @@ class StatsRenderingSystem extends VoidEntitySystem {
 
     ctx..font = 'bold ${ctx.font}'
        ..setFillColorHsl(color.hue, color.saturation, color.lightness)
-       ..fillText(textAbsorbed, 10, 460)
-       ..fillText(textBestAbsorbed, 10, 480)
-       ..fillText(textRadius, 490 - textRadiusWidth, 460)
-       ..fillText(textBestRadius, 490 - textBestRadiusWidth, 480);
+       ..fillText(textAbsorbed, 10, currentStatsY)
+       ..fillText(textBestAbsorbed, 10, bestStatsY)
+       ..fillText(textRadius, borderRight - textRadiusWidth, currentStatsY)
+       ..fillText(textBestRadius, borderRight - textBestRadiusWidth, bestStatsY);
   }
 
   String getRadius(double radius) {

@@ -33,6 +33,8 @@ class MovementSystem extends EntityProcessingSystem {
 }
 
 class WallBouncingSystem extends EntityProcessingSystem {
+  static const halfWidth = WIDTH / 2;
+  static const halfHeight = HEIGHT / 2;
   ComponentMapper<Velocity> vm;
   ComponentMapper<Transform> tm;
   WallBouncingSystem() : super(Aspect.getAspectForAllOf([Player, Velocity, Transform]));
@@ -44,32 +46,36 @@ class WallBouncingSystem extends EntityProcessingSystem {
 
     var x = t.pos.x;
     var y = t.pos.y;
-    if (x.abs() >= 250.0 * gameState.zoomFactor) {
-      t.pos.x = (x > 0.0 ? 250.0 : -250.0) * gameState.zoomFactor;
+    if (x.abs() >= halfWidth * gameState.zoomFactor) {
+      t.pos.x = (x > 0.0 ? halfWidth : -halfWidth) * gameState.zoomFactor;
       v.value.x = -0.8 * v.value.x;
     }
-    if (y.abs() >= 250.0 * gameState.zoomFactor) {
-      t.pos.y = (y > 0.0 ? 250.0 : -250.0) * gameState.zoomFactor;
+    if (y.abs() >= halfHeight * gameState.zoomFactor) {
+      t.pos.y = (y > 0.0 ? halfHeight : -halfHeight) * gameState.zoomFactor;
       v.value.y = -0.8 * v.value.y;
     }
   }
 }
 
 class CircleSpawner extends IntervalEntityProcessingSystem {
+  static const circleSpawnX = WIDTH + 100;
+  static const circleSpawnY = HEIGHT + 100;
+  static const halfCircleSpawnX = circleSpawnX / 2;
+  static const halfCircleSpawnY = circleSpawnY / 2;
   ComponentMapper<Circle> cm;
-  CircleSpawner() : super(1000, Aspect.getAspectForAllOf([Player, Circle]));
+  CircleSpawner() : super(750, Aspect.getAspectForAllOf([Player, Circle]));
 
   @override
   void processEntity(Entity entity) {
     var radius = cm.get(entity).radius;
-    var x = 350 - 700 * random.nextDouble();
-    var y = 350 - 700 * random.nextDouble();;
-    if (x.abs() < 300.0) {
+    var x = halfCircleSpawnX - circleSpawnX * random.nextDouble();
+    var y = halfCircleSpawnY - circleSpawnY * random.nextDouble();;
+    if (x.abs() < halfCircleSpawnX) {
       y = 0.5 - random.nextDouble();
       if (y < 0.0) {
-        y = -300 + y * 100;
+        y = -halfCircleSpawnY + y * 100;
       } else {
-        y = 300 + y * 100;
+        y = halfCircleSpawnY + y * 100;
       }
     }
     x *= gameState.zoomFactor;
@@ -89,6 +95,8 @@ class CircleSpawner extends IntervalEntityProcessingSystem {
 }
 
 class CircleRemover extends EntityProcessingSystem {
+  static const outOfBoundsX = (WIDTH + 200) / 2;
+  static const outOfBoundsY = (HEIGHT + 200) / 2;
   ComponentMapper<Lifetime> lm;
   ComponentMapper<Transform> tm;
   CircleRemover() : super(Aspect.getAspectForAllOf([Lifetime, Transform]));
@@ -99,7 +107,7 @@ class CircleRemover extends EntityProcessingSystem {
     lt.lifetime -= world.delta;
     if (lt.lifetime <= 0.0) {
       var pos = tm.get(entity).pos;
-      if (pos.x.abs() > 350.0 * gameState.zoomFactor || pos.y.abs() > 350.0 * gameState.zoomFactor) {
+      if (pos.x.abs() > outOfBoundsX * gameState.zoomFactor || pos.y.abs() > outOfBoundsY * gameState.zoomFactor) {
         entity.deleteFromWorld();
       }
     }

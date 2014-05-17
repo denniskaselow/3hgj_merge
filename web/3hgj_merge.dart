@@ -14,7 +14,7 @@ void main() {
 
 class Game extends GameBase {
 
-  Game() : super.noAssets('3hgj_merge', 'canvas', 500, 500);
+  Game() : super.noAssets('3hgj_merge', 'canvas', WIDTH, HEIGHT);
 
   void createEntities() {
     TagManager tm = world.getManager(TagManager);

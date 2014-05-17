@@ -8,6 +8,8 @@ part 'src/shared/components.dart';
 part 'src/shared/systems/logic.dart';
 
 const TAG_PLAYER = 'player';
+const WIDTH = 600;
+const HEIGHT = 600;
 
 final gameState = new GameState();
 
