@@ -5,9 +5,8 @@ dependencies:
   canvas_query: any
   dartemis_toolbox: any
   gamedev_helpers:
-#    git: https://github.com/denniskaselow/gamedev_helpers
-    path: ../gamedev_helpers
-  tweenengine: any
+    git: https://github.com/denniskaselow/gamedev_helpers
+#    path: ../gamedev_helpers
   lawndart: any
   dart_to_js_script_rewriter: any
 transformers:

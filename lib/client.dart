@@ -1,7 +1,7 @@
 library client;
 
-import 'dart:html' hide Player;
-export 'dart:html' hide Player;
+import 'dart:html' hide Player, Timeline;
+export 'dart:html' hide Player, Timeline;
 
 import 'package:3hgj_merge/shared.dart';
 export 'package:3hgj_merge/shared.dart';

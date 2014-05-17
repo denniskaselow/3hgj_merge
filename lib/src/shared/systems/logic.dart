@@ -1,13 +1,5 @@
 part of shared;
 
-class TweeningSystem extends VoidEntitySystem {
-
-  @override
-  void processSystem() {
-    tweenManager.update(world.delta);
-  }
-}
-
 class AcccelerationSystem extends EntityProcessingSystem {
   ComponentMapper<Acceleration> am;
   ComponentMapper<Velocity> vm;
@@ -70,17 +62,15 @@ class CircleSpawner extends IntervalEntityProcessingSystem {
   @override
   void processEntity(Entity entity) {
     var radius = cm.get(entity).radius;
-    var x = 0.5 - random.nextDouble();
-    var y = 0.5 - random.nextDouble();
-    if (x < 0.0) {
-      x = -300 + x * 100;
-    } else {
-      x = 300 + x * 100;
-    }
-    if (y < 0.0) {
-      y = -300 + y * 100;
-    } else {
-      y = 300 + y * 100;
+    var x = 350 - 700 * random.nextDouble();
+    var y = 350 - 700 * random.nextDouble();;
+    if (x.abs() < 300.0) {
+      y = 0.5 - random.nextDouble();
+      if (y < 0.0) {
+        y = -300 + y * 100;
+      } else {
+        y = 300 + y * 100;
+      }
     }
     x *= gameState.zoomFactor;
     y *= gameState.zoomFactor;
@@ -90,7 +80,7 @@ class CircleSpawner extends IntervalEntityProcessingSystem {
     world.createAndAddEntity([new Transform(x, y),
                               new Velocity(x: vx, y: vy),
                               new Lifetime(),
-                              new Circle(0.5 * radius + random.nextDouble() * radius),
+                              new Circle(0.5 * radius + random.nextDouble() * (radius + max(0.0, gameState.zoomFactor / 10.0))),
                               new Color(hue: random.nextInt(360),
                                   saturation: random.nextDouble() * 100,
                                   lightness: random.nextDouble() * 100,

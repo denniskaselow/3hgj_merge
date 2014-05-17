@@ -1,7 +1,6 @@
 library shared;
 
 import 'package:gamedev_helpers/gamedev_helpers_shared.dart';
-import 'package:tweenengine/tweenengine.dart';
 
 part 'src/shared/components.dart';
 
@@ -10,7 +9,6 @@ part 'src/shared/systems/logic.dart';
 
 const TAG_PLAYER = 'player';
 
-final tweenManager = new TweenManager();
 final gameState = new GameState();
 
 class GameState implements Tweenable {
