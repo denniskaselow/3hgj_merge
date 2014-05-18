@@ -4,7 +4,8 @@ import 'package:3hgj_merge/client.dart';
                              AcccelerationSystem, MovementSystem,
                              CanvasCleaningSystem, CircleSpawner,
                              CircleRemover, CircleCollisionDetectionSystem,
-                             WallBouncingSystem, StatsRenderingSystem
+                             WallBouncingSystem, StatsRenderingSystem,
+                             GravitySystem
                             ])
 import 'dart:mirrors';
 
@@ -26,6 +27,7 @@ class Game extends GameBase {
     return [
             new TweeningSystem(),
             new CircleSpawner(),
+//            new GravitySystem(),
             new InputHandlingSystem(),
             new AcccelerationSystem(),
             new MovementSystem(),

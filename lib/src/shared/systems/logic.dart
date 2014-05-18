@@ -86,6 +86,7 @@ class CircleSpawner extends IntervalEntityProcessingSystem {
 
     world.createAndAddEntity([new Transform(x, y),
                               new Velocity(x: vx, y: vy),
+                              new Acceleration(),
                               new Lifetime(),
                               new Circle(0.5 * radius + random.nextDouble() * (2 * radius + gameState.zoomFactor / 10.0)),
                               new Color(hue: random.nextInt(360),
@@ -212,4 +213,42 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
       }
     }
   }
+}
+
+class GravitySystem extends EntitySystem {
+  ComponentMapper<Transform> tm;
+  ComponentMapper<Circle> cm;
+  ComponentMapper<Acceleration> am;
+
+  GravitySystem(): super(Aspect.getAspectForAllOf([Transform, Circle, Acceleration]));
+
+  @override
+  void processEntities(Iterable<Entity> entitiesInBag) {
+    var entities = new List<Entity>();
+    entitiesInBag.forEach((entity) {
+      var a = am.get(entity);
+      entities.add(entity);
+    });
+    for (int i = 0; i < entities.length - 1; i++) {
+      var entity1 = entities[i];
+      var t1 = tm.get(entity1);
+      var m1 = cm.get(entity1);
+      var a1 = am.get(entity1);
+      for (int j = i + 1; j < entities.length; j++) {
+        var entity2 = entities[j];
+        var t2 = tm.get(entity2);
+        var m2 = cm.get(entity2);
+        var a2 = am.get(entity2);
+        var distSq = Utils.euclideanDistanceSq2D(t1.x, t1.y, t2.x, t2.y);
+        var force = 0.05 * m1.area * m2.area / distSq;
+        a1.x += (t2.x - t1.x) * force/m1.area;
+        a1.y += (t2.y - t1.y) * force/m1.area;
+        a2.x += (t1.x - t2.x) * force/m2.area;
+        a2.y += (t1.y - t2.y) * force/m2.area;
+      }
+    }
+  }
+
+  @override
+  bool checkProcessing() => true;
 }
