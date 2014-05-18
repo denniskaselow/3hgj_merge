@@ -2,8 +2,8 @@ part of shared;
 
 
 class Transform extends Component {
-  Vector2 pos;
-  Transform(num x, num y) : pos = new Vector2(x.toDouble(), y.toDouble());
+  double x, y;
+  Transform(num x, num y) : x = x.toDouble(), y = y.toDouble();
 }
 
 class Circle extends Component {
@@ -25,13 +25,15 @@ class Color extends Component {
 
 class Player extends Component {}
 class Acceleration extends Component {
-  Vector2 value = new Vector2.zero();
+  double x = 0.0;
+  double y = 0.0;
   double max = 10.0;
   Acceleration();
 }
 class Velocity extends Component {
-  Vector2 value;
-  Velocity({num x: 0, num y: 0}) : value = new Vector2(x.toDouble(), y.toDouble());
+  double x = 0.0;
+  double y = 0.0;
+  Velocity({num x: 0, num y: 0}) : x = x.toDouble(), y = y.toDouble();
 }
 class Lifetime extends Component {
   double lifetime = 10000.0;

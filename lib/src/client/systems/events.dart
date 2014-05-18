@@ -13,14 +13,14 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
       max *= sin(PI/4);
     }
     if (up) {
-      a.value.y = -max;
+      a.y = -max;
     } else if (down) {
-      a.value.y = max;
+      a.y = max;
     }
     if (left) {
-      a.value.x = -max;
+      a.x = -max;
     } else if (right) {
-      a.value.x = max;
+      a.x = max;
     }
   }
 

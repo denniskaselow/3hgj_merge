@@ -39,7 +39,7 @@ class CircleRenderingSystem extends EntityProcessingSystem {
 
     ctx..beginPath()
        ..setFillColorHsl(color.hue, color.saturation, color.lightness, color.opacity)
-       ..arc(t.pos.x / gameState.zoomFactor, t.pos.y / gameState.zoomFactor, circle.radius / gameState.zoomFactor, 0, 2 * PI)
+       ..arc(t.x / gameState.zoomFactor, t.y / gameState.zoomFactor, circle.radius / gameState.zoomFactor, 0, 2 * PI)
        ..fill()
        ..closePath();
   }
