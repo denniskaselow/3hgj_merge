@@ -86,7 +86,22 @@ class StatsRenderingSystem extends VoidEntitySystem {
   String getRadius(double radius) {
     radius = radius / 1000.0;
     var unit = 'm';
-    if (radius < 0.000000001) {
+    if (radius < 0.00000000000000000000001) {
+      unit = 'Planck length';
+      radius *= 1 / 1.62E-35;
+    } else if (radius < 0.000000000000000000001) {
+      unit = 'ym';
+      radius *= 1000000000000000000000000.0;
+    } else if (radius < 0.000000000000000001) {
+      unit = 'zm';
+      radius *= 1000000000000000000000.0;
+    } else if (radius < 0.000000000000001) {
+      unit = 'am';
+      radius *= 1000000000000000000.0;
+    } else if (radius < 0.000000000001) {
+      unit = 'fm';
+      radius *= 1000000000000000.0;
+    } else if (radius < 0.000000001) {
       unit = 'pm';
       radius *= 1000000000000.0;
     } else if (radius < 0.000001) {
@@ -121,9 +136,27 @@ class StatsRenderingSystem extends VoidEntitySystem {
     } else if (radius < 30856776000000000.0) {
       unit = 'lightyears';
       radius /= 9460528400000000.0;
-    } else {
+    } else if (radius < 9.46E18){
       unit = 'parsec';
       radius /= 30856776000000000.0;
+    } else if (radius < 4.25E20) {
+      unit = 'Milky Way thickness';
+      radius /= 9.46E18;
+    } else if (radius < 2.4E22) {
+      unit = 'Milky Way radius';
+      radius /= 4.25E20;
+    } else if (radius < 2.5E24) {
+      unit = 'distance to Andromeda Galaxy';
+      radius /= 2.4E22;
+    } else if (radius < 9.5E25) {
+      unit = 'Horologium Supercluster radius';
+      radius /= 2.5E24;
+    } else if (radius < 2.4E27) {
+      unit = 'Hercules-Corona Borealis Great Wall length';
+      radius /= 9.5E25;
+    } else {
+      unit = 'Universe radius';
+      radius /= 2.4E27;
     }
     return '${radius.toStringAsFixed(2)} $unit';
   }
