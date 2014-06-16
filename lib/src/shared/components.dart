@@ -27,7 +27,7 @@ class Player extends Component {}
 class Acceleration extends Component {
   double x = 0.0;
   double y = 0.0;
-  double max = 10.0;
+  double max = 0.00016;
   Acceleration();
 }
 class Velocity extends Component {

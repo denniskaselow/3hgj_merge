@@ -10,8 +10,8 @@ class AcccelerationSystem extends EntityProcessingSystem {
     var a = am.get(entity);
     var v = vm.get(entity);
 
-    v.x += a.x / world.delta;
-    v.y += a.y / world.delta;
+    v.x += a.x * world.delta;
+    v.y += a.y * world.delta;
 
     a.x = 0.0;
     a.y = 0.0;
@@ -28,8 +28,8 @@ class MovementSystem extends EntityProcessingSystem {
     var t = tm.get(entity);
     var v = vm.get(entity);
 
-    t.x += v.x / world.delta;
-    t.y += v.y / world.delta;
+    t.x += v.x * world.delta;
+    t.y += v.y * world.delta;
   }
 }
 
@@ -81,8 +81,8 @@ class CircleSpawner extends IntervalEntityProcessingSystem {
     }
     x *= gameState.zoomFactor;
     y *= gameState.zoomFactor;
-    var vx = -x.sign * (2.0 + random.nextDouble() * 18) * gameState.zoomFactor;
-    var vy = -y.sign * (2.0 + random.nextDouble() * 18) * gameState.zoomFactor;
+    var vx = -x.sign * (0.008 + random.nextDouble() * 0.1) * gameState.zoomFactor;
+    var vy = -y.sign * (0.008 + random.nextDouble() * 0.1) * gameState.zoomFactor;
 
     world.createAndAddEntity([new Transform(x, y),
                               new Velocity(x: vx, y: vy),
@@ -96,7 +96,7 @@ class CircleSpawner extends IntervalEntityProcessingSystem {
   }
 }
 
-class CircleRemover extends EntityProcessingSystem {
+class CircleRemover extends DelayedEntityProcessingSystem {
   static const outOfBoundsX = (WIDTH + 200) / 2;
   static const outOfBoundsY = (HEIGHT + 200) / 2;
   ComponentMapper<Lifetime> lm;
@@ -105,16 +105,23 @@ class CircleRemover extends EntityProcessingSystem {
   CircleRemover() : super(Aspect.getAspectForAllOf([Lifetime, Transform, Circle]));
 
   @override
-  void processEntity(Entity entity) {
+  num getRemainingDelay(Entity entity) {
+    return lm.get(entity).lifetime;
+  }
+
+  @override
+  void processDelta(Entity entity, double accumulatedDelta) {
     var lt = lm.get(entity);
-    lt.lifetime -= world.delta;
-    if (lt.lifetime <= 0.0) {
-      var pos = tm.get(entity);
-      if (pos.x.abs() > outOfBoundsX * gameState.zoomFactor ||
-          pos.y.abs() > outOfBoundsY * gameState.zoomFactor ||
-          cm.get(entity).radius / gameState.zoomFactor < 0.1) {
-        entity.deleteFromWorld();
-      }
+    lt.lifetime -= accumulatedDelta;
+  }
+
+  @override
+  void processExpired(Entity entity) {
+    var pos = tm.get(entity);
+    if (pos.x.abs() > outOfBoundsX * gameState.zoomFactor ||
+        pos.y.abs() > outOfBoundsY * gameState.zoomFactor ||
+        cm.get(entity).radius / gameState.zoomFactor < 0.1) {
+      entity.deleteFromWorld();
     }
   }
 }
@@ -156,7 +163,7 @@ class CircleCollisionDetectionSystem extends EntityProcessingSystem {
         }
         for (int i = 0; i < 3 * sqrt(area) / gameState.zoomFactor; i++) {
           var velocityAngle = 2 * PI * random.nextDouble();
-          var velocityMult = 25.0 + random.nextDouble() * 50;
+          var velocityMult = 0.1 + random.nextDouble() * 0.2;
           world.createAndAddEntity([new Particle(),
                                     new Lifetime(),
                                     new Transform(pos.x + sin(-circle.radius + random.nextDouble() * 2 * circle.radius),

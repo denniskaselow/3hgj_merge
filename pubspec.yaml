@@ -9,5 +9,8 @@ dependencies:
 #    path: ../gamedev_helpers
   lawndart: any
   dart_to_js_script_rewriter: any
+dependency_overrides:
+  dartemis:
+    path: ../dartemis
 transformers:
 - dart_to_js_script_rewriter
